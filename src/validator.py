@@ -1,4 +1,5 @@
 import duckdb
+import pandas as pd
 
 class Validator:
     def __init__(self):
@@ -10,7 +11,7 @@ class Validator:
         'GRANT', 'REVOKE', 'EXECUTE', 'EXEC'
     ]
 
-    def validate_query(self, query: str) -> tuple[bool, str]:
+    def validate_query(self, query: str, df: pd.DataFrame) -> tuple[bool, str]:
         """
         Validate the SQL query for security and correctness.
         """
@@ -19,7 +20,7 @@ class Validator:
             if keyword in query.upper():
                 return False, f"Unsafe keyword: {keyword}"
         
-        if ";" in query:
+        if ";" in query.rstrip(';'):
             return False, "Semicolon is not allowed"
         
         if not query.strip().startswith("SELECT"):
@@ -27,10 +28,7 @@ class Validator:
         
         if 'FROM' in query.upper():
 
-            if 'df' not in query.lower():
+            if 'FROM df' not in query:
                 return False, "Query must reference the dataframe 'df' only"
-        try:
-            _ = duckdb.sql(query, read_only=True)
-            return True, "Query is valid"
-        except Exception as e:
-            return False, f"Error: {e}"
+
+        return True, "Query is valid"

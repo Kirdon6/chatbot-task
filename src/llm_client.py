@@ -15,4 +15,8 @@ class LLMClient:
             model=model,
             messages=[{"role": "user", "content": prompt}]
         )
-        return response.content[0].text, response.usage.input_tokens + response.usage.output_tokens
+        return response.content[0].text, response.usage.output_tokens
+
+    def count_tokens(self, model, prompt) -> int:
+        tokens =self.client.messages.count_tokens(model=model, messages=[{"role": "user", "content": prompt}])
+        return tokens.input_tokens
