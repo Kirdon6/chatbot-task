@@ -23,8 +23,10 @@ class ChatbotEngine:
         while True:
             # Initialization of the conversation
             user_input: str = input("You: ").strip()
+            self.logger.log_message(f"User input: {user_input}")
             if user_input.lower() in ["quit", "exit", "bye"]:
                 print("Chatbot: Goodbye!")
+                self.logger.log_message("User exited the chat")
                 break
             elif user_input.lower() == "help":
                 print("Claude: Available commands:")
@@ -38,8 +40,10 @@ class ChatbotEngine:
                 self.conversation_history = []
                 self.current_context_usage = 0
                 print("Claude: Conversation history cleared")
+                self.logger.log_message("Conversation history cleared")
                 continue
             if not user_input:
+                self.logger.log_message("User input is empty")
                 continue
             
             # Format the conversation history for the LLM
@@ -50,7 +54,6 @@ class ChatbotEngine:
 
             # Add the user input to the conversation history
             self.conversation_history.append({"role": "user", "content": user_input})
-            self.logger.log_message(f"User input: {user_input}")
 
             # Generate the SQL query with retries
             for i in range(self.max_retries):
