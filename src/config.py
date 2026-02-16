@@ -1,4 +1,4 @@
-SQL_PROMPT = """
+SQL_PROMPT: str = """
 You are expert in SQL. You are given marketing pandas dataframe called `df` with following schema:
 {schema}
 
@@ -30,7 +30,7 @@ This is conversation history:
 You are given a task to answer the question: {question}
 """
 
-TEXT_RESPONSE_PROMPT = """
+TEXT_RESPONSE_PROMPT: str = """
 You are a marketing analytics assistant. Convert SQL query results into natural, conversational language.
 
 Rules:
@@ -53,7 +53,7 @@ SQL query: {sql_query}
 Query results: {sql_results}
 """
 
-SCHEMA_CONTEXT = """
+SCHEMA_CONTEXT: str = """
 Pandas dataframe called `df` with following schema:
 Table: df
 Columns:
@@ -81,20 +81,20 @@ Important Notes:
 - For "top N" queries, use ORDER BY DESC LIMIT N
 """
 
-SUMMARY_PROMPT = """
+SUMMARY_PROMPT: str = """
 You are a marketing analytics assistant. You are given a conversation history and you need to summarize it in a few sentences.
 The most important information are exact numbers and metrics that are relevant to the conversation. You don't need to summarize queries, just the results.
 Conversation history:
 {conversation_history}
 """
 
-MAX_CONTEXT_WINDOW = 200000
-SUMMARIZATION_THRESHOLD = 0.85
-MAX_RETRIES = 3
-KEEP_RECENT_TURNS = 2
-TURN_SIZE = 3
-LARGE_RESULT_THRESHOLD = 1000
+MAX_CONTEXT_WINDOW: int = 200000
+SUMMARIZATION_THRESHOLD: float = 0.85
+MAX_RETRIES: int = 3
+KEEP_RECENT_TURNS: int = 2
+TURN_SIZE: int = 3
+LARGE_RESULT_THRESHOLD: int = 1000
 
-SQL_GENERATION_MODEL = "claude-sonnet-4-5-20250929"
-TEXT_FORMATTING_MODEL = "claude-haiku-4-5-20251001"
-SUMMARIZATION_MODEL = "claude-haiku-4-5-20251001"
+SQL_GENERATION_MODEL: str = "claude-sonnet-4-5-20250929"
+TEXT_FORMATTING_MODEL: str = "claude-haiku-4-5-20251001"
+SUMMARIZATION_MODEL: str = "claude-haiku-4-5-20251001"

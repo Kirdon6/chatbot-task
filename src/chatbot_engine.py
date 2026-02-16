@@ -12,8 +12,8 @@ class ChatbotEngine:
     execution, and natural language response formatting.
     
     Uses a two-stage LLM pipeline:
-    1. Claude Sonnet 4.5: Natural language → SQL query
-    2. Claude Haiku 4.5: SQL results → Natural language response
+    1. Claude Sonnet 4.5: Natural language -> SQL query
+    2. Claude Haiku 4.5: SQL results-> Natural language response
     
     Features:
     - Conversation history management with automatic summarization
@@ -41,7 +41,7 @@ class ChatbotEngine:
         while True:
             # Initialization of the conversation
             user_input: str = input("You: ").strip()
-            self.logger.log_message(f"User input: {user_input}\n")
+            self.logger.log_message(f"User input: {user_input}")
             if user_input.lower() in ["quit", "exit", "bye"]:
                 print("Chatbot: Goodbye!")
                 self.logger.log_message("User exited the chat")
@@ -83,7 +83,7 @@ class ChatbotEngine:
                     if self.current_context_usage > self.current_context * self.max_context_usage_percentage:
                         self.summarize_conversation_history()
                         conversation_history_str: str = "\n".join(
-                            f"{message['role'].capitalize()}: {message['content']}\n" for message in self.conversation_history
+                            f"{message['role'].capitalize()}: {message['content']}" for message in self.conversation_history
                         )
                         self.logger.log_message(f"New Conversation History: {conversation_history_str}")
 
@@ -116,7 +116,7 @@ class ChatbotEngine:
 
                         if len(result) >= self.large_result_threshold:
                             # If the result is too big, we need to truncate it
-                            result = result.head(1000)
+                            result = result.head(self.large_result_threshold)
                             print(f"Claude: Result is too big, truncated to {self.large_result_threshold} rows")
                             self.logger.log_message(f"Result is too big, truncated to {self.large_result_threshold} rows")
 
@@ -124,7 +124,7 @@ class ChatbotEngine:
                         if self.current_context_usage > self.current_context * self.max_context_usage_percentage:
                             self.summarize_conversation_history()
                             conversation_history_str: str = "\n".join(
-                                f"{message['role'].capitalize()}: {message['content']}\n" for message in self.conversation_history
+                                f"{message['role'].capitalize()}: {message['content']}" for message in self.conversation_history
                             )
                             self.logger.log_message(f"New Conversation History: {conversation_history_str}")
                         short_conversation_history_str: str = "\n".join(
@@ -161,7 +161,7 @@ class ChatbotEngine:
                     if i == self.max_retries - 1:
                         self.logger.log_error(f"Error generating SQL message: {e}")
                         print(f"Claude: I'm sorry, I couldn't generate a valid SQL query. Try to rephrase your question.")
-                    
+                        break
                     continue
 
     def summarize_conversation_history(self) -> None:
@@ -174,7 +174,7 @@ class ChatbotEngine:
 
         self.logger.log_message("Summarizing conversation history")
         conversation_history_str: str = "\n".join(
-                f"{message['role'].capitalize()}: \n {message['content']}\n" for message in self.conversation_history[:-(KEEP_RECENT_TURNS * TURN_SIZE)]
+                f"{message['role'].capitalize()}: {message['content']}" for message in self.conversation_history[:-(KEEP_RECENT_TURNS * TURN_SIZE)]
             )
         summary_message, summary_message_usage = self.llm_client.generate_response_usage(
             model=SUMMARIZATION_MODEL,
@@ -186,4 +186,4 @@ class ChatbotEngine:
         self.conversation_history.append({"role": "summary", "content": summary_message, "usage": summary_message_usage})
         self.conversation_history.extend(recent_history)
         self.current_context_usage = sum(message["usage"] for message in self.conversation_history)
-        self.logger.log_message(f"Current context usage: {self.current_context_usage}\n")
+        self.logger.log_message(f"Current context usage: {self.current_context_usage}")

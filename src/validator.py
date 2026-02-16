@@ -11,11 +11,11 @@ class Validator:
     - Non-SELECT queries
     - Queries not targeting the 'df' dataframe
     """
-    
+
     def __init__(self) -> None:
         pass
 
-    UNSAFE_KEYWORDS = [
+    UNSAFE_KEYWORDS: list[str] = [
         'DROP', 'DELETE', 'UPDATE', 'INSERT', 'ALTER', 
         'CREATE', 'TRUNCATE', 'REPLACE', 'MERGE',
         'GRANT', 'REVOKE', 'EXECUTE', 'EXEC'
@@ -33,7 +33,7 @@ class Validator:
         if ";" in query.rstrip(';'):
             return False, "Semicolon is not allowed"
         
-        if not query.strip().startswith("SELECT"):
+        if not query.strip().upper().startswith("SELECT"):
             return False, "Only SELECT queries are allowed"
         
         if 'FROM' in query.upper():
