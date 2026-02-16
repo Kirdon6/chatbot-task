@@ -40,14 +40,22 @@ Rules:
 4. For rankings, list top items clearly
 5. If results are empty, say "No data found matching those criteria"
 6. Do NOT mention SQL or technical details
+7. Sometimes the question is follow-up to the previous question, so you need to use conversation history to understand the context
 
 User question: {user_question}
+
+Conversation history: 
+<START OF CONVERSATION HISTORY>
+{conversation_history}
+<END OF CONVERSATION HISTORY>
+
 SQL query: {sql_query}
 Query results: {sql_results}
 """
 
 SCHEMA_CONTEXT = """
-Table: marketing_data
+Pandas dataframe called `df` with following schema:
+Table: df
 Columns:
 - Year (integer): 2020-2023
 - Quarter (string): Format "YYYY QN" (e.g., "2023 Q2")
@@ -70,15 +78,12 @@ Calculated Metrics:
 
 Important Notes:
 - Column names with spaces MUST be quoted (e.g., "Media Category")
-- Latest data available: 2023 Q3 (most recent quarter)
-- "Last quarter" refers to 2023 Q3
-- "This year" refers to 2023
 - For "top N" queries, use ORDER BY DESC LIMIT N
 """
 
 SUMMARY_PROMPT = """
 You are a marketing analytics assistant. You are given a conversation history and you need to summarize it in a few sentences.
-The most important information are values and metrics that are relevant to the conversation.
+The most important information are exact numbers and metrics that are relevant to the conversation. You don't need to summarize queries, just the results.
 Conversation history:
 {conversation_history}
 """

@@ -11,10 +11,10 @@ class ChatbotEngine:
         self.validator: Validator = Validator()
         self.logger: Logger = Logger()
         self.conversation_history: list[dict] = [] # add structure for the conversation history
-        self.current_context = 200000 # 200000 tokens is the maximum context window size for the LLM
+        self.current_context = 20000 # 200000 tokens is the maximum context window size for the LLM
         self.current_context_usage = 0
         self.max_retries: int = 3
-        self.max_context_usage_percentage: float = 0.85
+        self.max_context_usage_percentage: float = 0.1
         print("Claude: Hello! I'm here to help you with your data analysis questions. Ask me anything about the data!")
         print("Claude: For help, type 'help'")
 
@@ -65,6 +65,7 @@ class ChatbotEngine:
                     # Check if the context usage is too high and summarize the conversation history
                     if self.current_context_usage > self.current_context * self.max_context_usage_percentage:
                         self.summarize_conversation_history()
+                        self.logger.log_message(f"New Conversation History: {self.conversation_history}")
 
                     # Generate the SQL query
                     self.logger.log_message(f"User input: {user_input}")
@@ -100,11 +101,14 @@ class ChatbotEngine:
                         # If the context usage is too big, summarize the conversation history
                         if self.current_context_usage > self.current_context * self.max_context_usage_percentage:
                             self.summarize_conversation_history()
-
+                            self.logger.log_message(f"New Conversation History: {self.conversation_history}")
+                        short_conversation_history_str: str = "\n".join(
+                            f"{message['role']}: {message['content']}" for message in self.conversation_history[-6:]
+                        )
                         # Generate the text response
                         text_message, text_message_output_usage = self.llm_client.generate_response_usage(
                             model="claude-haiku-4-5-20251001",
-                            prompt=TEXT_RESPONSE_PROMPT.format(user_question=user_input, sql_results=result.to_string(), sql_query=query),
+                            prompt=TEXT_RESPONSE_PROMPT.format(user_question=user_input, sql_results=result.to_string(), sql_query=query, conversation_history=short_conversation_history_str),
                             max_tokens=10000
                         )
 
