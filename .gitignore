@@ -1,6 +1,11 @@
 *.csv
 .env
+*.log
 logs/
-src/__pycache__/
 __pycache__/
-test.ipynb
+*.pyc
+.DS_Store
+venv/
+.venv/
+*.egg-info/
+.pytest_cache/

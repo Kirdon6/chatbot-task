@@ -87,3 +87,14 @@ The most important information are exact numbers and metrics that are relevant t
 Conversation history:
 {conversation_history}
 """
+
+MAX_CONTEXT_WINDOW = 200000
+SUMMARIZATION_THRESHOLD = 0.85
+MAX_RETRIES = 3
+KEEP_RECENT_TURNS = 2
+TURN_SIZE = 3
+LARGE_RESULT_THRESHOLD = 1000
+
+SQL_GENERATION_MODEL = "claude-sonnet-4-5-20250929"
+TEXT_FORMATTING_MODEL = "claude-haiku-4-5-20251001"
+SUMMARIZATION_MODEL = "claude-haiku-4-5-20251001"

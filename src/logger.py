@@ -2,16 +2,16 @@ from datetime import datetime
 import os
 
 class Logger:
-    def __init__(self):
+    def __init__(self) -> None:
         os.makedirs('logs', exist_ok=True)
         self.filename: str = f"logs/chatbot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 
-    def log_error(self, error: str):
+    def log_error(self, error: str) -> None:
         with open(self.filename, 'a') as f:
-            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - ERROR: {error}\n")
+            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - ERROR:\n {error}\n")
 
-    def log_message(self, message: str):
+    def log_message(self, message: str) -> None:
         with open(self.filename, 'a') as f:
-            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - MESSAGE: {message}\n")
+            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - MESSAGE:\n{message}\n")
 
     
